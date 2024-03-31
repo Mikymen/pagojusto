@@ -1,0 +1,99 @@
+/* .App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */
+
+.input_error {
+  border-color: rgb(243, 51, 118);
+  box-shadow: none;
+}
+.input_error[type=number]:focus {
+  border: 2px solid red;
+}
+.row_warning{
+  background-color: rgb(182, 182, 182);
+}
+.row_error{
+  background-color: pink;
+}
+.resaltado {
+  outline:"2px green solid";
+}
+.filas_tabla tbody tr:hover td{
+  cursor: pointer;
+  background-color: rgb(60, 60, 60);
+  color:white;
+}
+
+.resaltado td{
+  background-color: green !important;
+  color:white;
+}
+.theme_btn{
+  font-size: 25pt;
+  cursor: pointer;
+  display: inline-block;
+  width: 40px;
+  text-align: center;
+}
+.btnDay{
+  background-color: white;
+  color: #0172ad;
+  font-size: 28px;
+}
+.btnDayPressed{
+  background-color: rgb(226, 242, 250);
+}
+.btnNight{
+  background-color: #035c8c;
+  color: white;
+  font-size: 28px;
+}
+.btnNightPressed{
+  background-color: #024a70;
+}
+.welcome{
+  margin-top: 60pt;
+  padding: 15pt;
+}
+.btnConfiguracion{
+  font-size: 24pt;
+  cursor: pointer;
+}
+.btnConfiguracion:hover{
+  text-decoration: underline;
+}
