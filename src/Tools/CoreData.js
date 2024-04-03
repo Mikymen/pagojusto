@@ -49,12 +49,12 @@ let DATA = {
     },
   ],
   vecinos: [
-    { id: 0, nombre: "Juan Perez", departamento: "A50" },
-    { id: 1, nombre: "Alejandra Gutierrez", departamento: "A51" },
-    { id: 2, nombre: "Marco Antonio", departamento: "A53" },
-    { id: 3, nombre: "Cristhian Chavez", departamento: "A54" },
-    { id: 4, nombre: "Andrea Castellon", departamento: "B55" },
-    { id: 5, nombre: "Erick Torrez", departamento: "B56" },
+    { id: 0, nombre: "Juan Perez", departamento: "A50", activo:1 },
+    { id: 1, nombre: "Alejandra Gutierrez", departamento: "A51", activo:1 },
+    { id: 2, nombre: "Marco Antonio", departamento: "A53", activo:1 },
+    { id: 3, nombre: "Cristhian Chavez", departamento: "A54", activo:1 },
+    { id: 4, nombre: "Andrea Castellon", departamento: "B55", activo:1 },
+    { id: 5, nombre: "Erick Torrez", departamento: "B56", activo:1 },
   ],
   cobros: [
     {
@@ -164,4 +164,34 @@ export const GuardarFactura = (id_servicio, anio, mes, consumo_anterior, consumo
   DATA = JSON.parse(localStorage.DATA);
 
   return lastFactura_id + 1;
+}
+
+// export const GuardarVecinos = (id, departamento, nombre)=>{
+//   let vecinoFounded= DATA.VECINOS.find(vec=>vec.id === id);
+//   vecinoFounded.departamento= departamento;
+//   vecinoFounded.nombre=nombre;
+
+//   localStorage.setItem("DATA", JSON.stringify(DATA));
+//   DATA = JSON.parse(localStorage.DATA);
+// }
+
+export const GuardarVecinos = (newVecinos)=>{
+  newVecinos.forEach(vec=>{
+    if(vec.activo===2)
+      vec.activo=0;
+  });
+  DATA.vecinos = newVecinos;
+  localStorage.setItem("DATA", JSON.stringify(DATA));
+  DATA = JSON.parse(localStorage.DATA);
+}
+export const GuardarNuevoVecino=(departamento, nombre)=>{
+  let newId = DATA.vecinos[DATA.vecinos.length-1].id +1;
+  DATA.vecinos.push({
+    id:newId,
+    departamento,
+    nombre,
+    activo:1
+  });
+  localStorage.setItem("DATA", JSON.stringify(DATA));
+  DATA = JSON.parse(localStorage.DATA);
 }

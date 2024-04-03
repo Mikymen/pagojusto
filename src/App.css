@@ -97,3 +97,7 @@
 .btnConfiguracion:hover{
   text-decoration: underline;
 }
+.removed{
+  text-decoration: line-through;
+  color: red;
+}

@@ -81,7 +81,8 @@ const PageNuevo = () => {
 
 
 
-  const vecinosCobros = VECINOS.map((vecino) => {
+  const vecinosCobros = VECINOS.filter(vec => vec.activo===1).map((vecino) => {
+    
     const cobro = {
       id: 0,
       id_factura: 0,
@@ -95,6 +96,7 @@ const PageNuevo = () => {
       included: true,
     };
     return cobro;
+    
   });
 
   const [cobros, setCobros] = useState(vecinosCobros);
