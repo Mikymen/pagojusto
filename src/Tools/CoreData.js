@@ -45,6 +45,7 @@ let DATA = {
       consumo_final: 6,
       total_pago: 224,
       tarifa: 4,
+      nota:"Factura de Enero observada",
       fecha:"2011-10-05T14:48:00.000Z",
     },
   ],
@@ -78,7 +79,12 @@ let DATA = {
   ],
 };
 
+const CheckVersion = (version)=>{
+  
+}
+
 if (typeof localStorage.DATA !== "undefined") {
+  CheckVersion(window.AppVer);
   DATA = JSON.parse(localStorage.DATA);
 } else {
   localStorage.setItem("DATA", JSON.stringify(DATA));
@@ -128,13 +134,14 @@ export const CobrosByFacturaId = (id)=>{
     return cobros.filter(cobro => cobro.id_factura === id);
 }
 
-export const GuardarFactura = (id_servicio, anio, mes, consumo_anterior, consumo_actual, consumo_final, total_pago, tarifa, dataCobros)=>{
+export const GuardarFactura = (id_servicio, anio, mes, nota, consumo_anterior, consumo_actual, consumo_final, total_pago, tarifa, dataCobros)=>{
   let lastFactura_id = facturas[facturas.length -1].id;
   let factura={
     id: lastFactura_id + 1,
     id_servicio,
     anio,
     mes,
+    nota,
     consumo_anterior,
     consumo_actual,
     consumo_final,
@@ -195,3 +202,4 @@ export const GuardarNuevoVecino=(departamento, nombre)=>{
   localStorage.setItem("DATA", JSON.stringify(DATA));
   DATA = JSON.parse(localStorage.DATA);
 }
+

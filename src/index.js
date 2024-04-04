@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+window.AppVer = "1.1.0";
 root.render(
   // <React.StrictMode>
   //   <App />

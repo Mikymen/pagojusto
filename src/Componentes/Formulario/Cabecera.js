@@ -6,11 +6,11 @@ const Cabecera = ({ data }) => {
   const {currency} = useContext(ExpensaContexto);
   if (data)
     return (
-      <div>
+      <div className="overflow-auto">
         <h4>
           Periodo: {Mes(data.mes)}-{data.anio}
         </h4>
-        <table className="container">
+        <table >
           <tbody>
             <tr>
               <td>
@@ -42,6 +42,10 @@ const Cabecera = ({ data }) => {
             </tr>
           </tbody>
         </table>
+        {
+          data.nota !=="" &&
+          <p className="nota"><strong>Nota: </strong>{data.nota}</p>
+        }
       </div>
     );
 };

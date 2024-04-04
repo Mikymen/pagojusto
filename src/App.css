@@ -101,3 +101,10 @@
   text-decoration: line-through;
   color: red;
 }
+.msg_error{
+  color: red;
+}
+.nota{
+  color:green;
+  text-align: center;
+}

@@ -8,12 +8,8 @@ const CalcularTabla = (dataTabla, totalPagar, cobros_totales) =>{
   let total_pago =0;
   newData.forEach(roww => {
       total_consumo += roww.consumo_final;
-      if(roww.consumo_actual < 0 || roww.consumo_final < 0){
-        roww.con_act_valido = false;
-      }
-      if(roww.consumo_anterior < 0){
-        roww.con_ant_valido =false;
-      }
+      roww.con_act_valido = !(roww.consumo_actual < 0 || roww.consumo_final < 0);
+      roww.con_ant_valido = !(roww.consumo_anterior < 0);
   });
   let tarifa = (totalPagar > 0 && total_consumo > 0)?  totalPagar / total_consumo :0 ;
   
@@ -36,14 +32,7 @@ const CalcularTabla = (dataTabla, totalPagar, cobros_totales) =>{
 }
 
 const TablaCobros = ({dataCobros, cobrosTotales, totalPagar, moneda, medida, isEditing = false, handleQuitPerson=null, dataAnt=null}) => {
-  dataCobros.map(cobro => {
-    cobro["con_act_valido"]=true;
-    cobro["con_ant_valido"]=true; 
-    return cobro;
-  });
-  const [data, setData] = useState();
-
-  const [isPagosValido, setIsPagosValido] = useState(false);
+    const [data, setData] = useState();
 
   useEffect(()=>{
     setData(dataCobros);
@@ -167,6 +156,11 @@ if(data)
               <td>{cobro.total_pago.toFixed(2)}</td>
             </tr>
           ))}
+          {data.length ===0 && 
+            <tr>
+              <td colSpan={7} className='msg_error'>Tabla vacia, agregue un propietario de la lista superior</td>
+            </tr>
+          }
         </tbody>
       </table>
   </div>

@@ -36,13 +36,14 @@ const PageNuevo = () => {
 
   const mes = useRef();
   const anio = useRef();
+  const nota = useRef();
   const dialogo = useRef();
   const [totalPagar, setTotalPagar] = useState(0);
 
   const [lecturaAnterior, setLecturaAnterior] = useState(input);
   const [lecturaActual, setLecturaActual] = useState(input);
   const [lecturaFinal, setLecturaFinal] = useState(input);
-
+  const [msgError, setMsgError] = useState();
   
   const [facturasLista, setFacturasLista] = useState(cloneFacturas);
 
@@ -94,12 +95,15 @@ const PageNuevo = () => {
       factura: null,
       vecino: vecino,
       included: true,
+      con_act_valido:true,
+      con_ant_valido:true,
     };
     return cobro;
     
   });
 
   const [cobros, setCobros] = useState(vecinosCobros);
+  
   const [cobrosAnt, setCobrosAnt] = useState();
   let cobrosTotales={
     consumo_final : 0,
@@ -146,10 +150,30 @@ const PageNuevo = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     let form = formulario.current;
-    const id_factura = GuardarFactura(+id_servicio, +anio.current.value, +mes.current.value, +lecturaAnterior.valor, +lecturaActual.valor, +lecturaFinal.valor, totalPagar, 
-      Number(cobrosTotales.tarifa.toFixed(3)), cobros );
-    form.action ="/factura/"+id_factura;
-    form.submit();
+    let cobrosFinales = cobros.filter((cobro) => cobro.included === true);
+    if(cobrosFinales.length === 0){
+      //alerta
+      setMsgError("Debe tener al menos un propietario en la tabla.")
+    }else if(cobrosFinales.filter(cobro=> (cobro.con_act_valido && cobro.con_ant_valido)).length < cobrosFinales.length){
+      setMsgError("Debe corregir los errores de la tabla antes de guardar.")
+    }else if (totalPagar <= 0 || cobrosTotales.total_pago <= 0){
+      setMsgError("El monto total y la suma de pagos debe ser mayor a 0.")
+    }
+     else{
+      const id_factura = GuardarFactura(
+        +id_servicio, 
+        +anio.current.value, 
+        +mes.current.value, 
+        nota.current.value, 
+        +lecturaAnterior.valor, 
+        +lecturaActual.valor, 
+        +lecturaFinal.valor, 
+        totalPagar, 
+        Number(cobrosTotales.tarifa.toFixed(3)), cobros.filter((cobro) => cobro.included === true) 
+        );
+      form.action ="/factura/"+id_factura;
+      form.submit();
+    }
   };
 
   const formulario = useRef();
@@ -161,7 +185,7 @@ const PageNuevo = () => {
                 <h4>Datos de la factura</h4>
             </div>
             <div className="col-xs-6 last-xs">
- <button  onClick={handleDialogoOpen}>Seleccionar lecturas anteriores</button>
+ <button  onClick={handleDialogoOpen}>Seleccionar lectura anterior</button>
             </div>
         </div>
         
@@ -237,37 +261,42 @@ const PageNuevo = () => {
               <summary>
                 <u>Agregar una nota </u>
               </summary>
-              <textarea placeholder="Escriba aqui..." rows="2"></textarea>
+              <textarea ref={nota} placeholder="Escriba aqui..." rows="2"></textarea>
               <sub>Maximo 255 caracteres.</sub>
             </details>
           </div>
         </div>
-        <p>Propietarios</p>
-        <div className="container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Departamento</th>
-                            <th>Propietario</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {cobros.filter(cobro => cobro.included ===false).map(cobro =>(
-                            <tr key={cobro.vecino.id}>
-                                <td><button type="button" onClick={()=>handleAddPerson(cobro.vecino)} >Agregar</button></td>
-                                <td>{cobro.vecino.departamento}</td>
-                                <td>{cobro.vecino.nombre}</td>
+        {/* MEJORAR DESPUES*/}
+        {cobros.filter(cobro => cobro.included ===false).length > 0 &&
+          <>        
+            <p>Propietarios sin asignación de gastos:</p>
+            <div className="overflow-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Departamento</th>
+                                <th>Propietario</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            {cobros.filter(cobro => cobro.included ===false).map(cobro =>(
+                                <tr key={cobro.vecino.id}>
+                                    <td><button type="button" onClick={()=>handleAddPerson(cobro.vecino)} >Agregar</button></td>
+                                    <td>{cobro.vecino.departamento}</td>
+                                    <td>{cobro.vecino.nombre}</td>
+                                </tr>
 
-                        ))}
-                    </tbody>
-                </table>
-        </div>
-        <p>Tabla de consumos</p>
+                            ))}
+                        </tbody>
+                    </table>
+            </div>
+          </>
+        }
+        <p>Tabla de consumos:</p>
         <div>
           <TablaCobros
-            dataCobros={cobros.filter((cobro) => cobro.included === true)}
+            dataCobros={cobros.filter(cobro => cobro.included === true)}
             totalPagar={ totalPagar}
             tarifa={0}
             moneda={currency}
@@ -280,6 +309,9 @@ const PageNuevo = () => {
         </div>
 
         <hr />
+        <section className="msg_error">
+          {msgError && "AVISO: " + msgError}
+        </section>
         <section className="row center-xs">
           <div className="col-xs-3 col-md-2">
             <button onClick={() => navigate("/servicio/"+id_servicio)} className="secondary">
